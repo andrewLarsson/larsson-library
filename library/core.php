@@ -3,8 +3,8 @@
 
 //All PATH defines are declared here in a block-based heirarchy for easy visualization. All other defines should come from a configuration file.
 define("PATH_OMEGA_ROOT", DIRECTORY_SEPARATOR); {
-	define("PATH_MEGA_ROOT", PATH_OMEGA_ROOT . "opt"); {
-		define("PATH_ROOT", PATH_MEGA_ROOT . DIRECTORY_SEPARATOR . "larsson"); {
+	define("PATH_MEGA_ROOT", PATH_OMEGA_ROOT . "opt" . DIRECTORY_SEPARATOR . "larsson"); {
+		define("PATH_ROOT", PATH_MEGA_ROOT . DIRECTORY_SEPARATOR . "library"); {
 			define("PATH_CONF", PATH_ROOT . DIRECTORY_SEPARATOR . "conf"); {
 				define("PATH_CONF_CORE", PATH_CONF . DIRECTORY_SEPARATOR . "core"); {
 				}
