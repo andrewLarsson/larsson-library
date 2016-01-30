@@ -11,7 +11,7 @@ function APICreate($request, $requestBody) {
 		new Larsson\Library\Models\BookModel([
 			"ISBN13" => $requestBody->ISBN13,
 			"AuthorID" => $requestBody->AuthorID,
-			"BookSeriesID" => ((empty($requestBody->BookSeriesID))
+			"BookSeriesID" => ((!empty($requestBody->BookSeriesID))
 				? $requestBody->BookSeriesID
 				: null
 			),
