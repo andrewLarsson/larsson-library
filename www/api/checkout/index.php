@@ -1,5 +1,5 @@
 <?php
-require_once("/opt/larsson/library/library/core.php");
+require_once("/opt/larsson/library/core.php");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 1000");
