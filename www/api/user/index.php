@@ -27,7 +27,7 @@ function APIRead($request, $requestBody) {
 	return ((isset($request["UserID"]))
 		? Larsson\Library\Utilities\SQLHelper::prepareSelect(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
-			new Larsson\Library\Models\UserID([
+			new Larsson\Library\Models\UserModel([
 				"UserID" => $request["UserID"],
 			])
 		)->execute()->fetchObject("Larsson\\Library\\Models\\UserModel")
