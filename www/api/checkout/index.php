@@ -69,7 +69,7 @@ function APIDelete($request, $requestBody) {
 	Larsson\Library\Utilities\SQLHelper::prepareDelete(
 		Larsson\Library\Database\Databases::LarssonLibrary(),
 		new Larsson\Library\Models\CheckoutModel([
-			"CheckoutID" => $requestBody->CheckoutID,
+			"CheckoutID" => $request["CheckoutID"],
 		])
 	)->execute();
 	return (new stdClass());
