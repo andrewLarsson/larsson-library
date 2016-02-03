@@ -30,13 +30,16 @@ function APICreate($request, $requestBody) {
 
 function APIRead($request, $requestBody) {
 	return ((isset($request["BookID"]) || isset($request["ISBN13"]))
-		? Larsson\Library\Utilities\SQLHelper::prepareSelect(
-			Larsson\Library\Database\Databases::LarssonLibrary(),
-			((isset($request["BookID"]))
-				? new Larsson\Library\Models\BookModel([
+		? ((isset($request["BookID"]))
+			? Larsson\Library\Utilities\SQLHelper::prepareSelect(
+				Larsson\Library\Database\Databases::LarssonLibrary(),
+				new Larsson\Library\Models\BookModel([
 					"BookID" => $request["BookID"],
 				])
-				: new Larsson\Library\Models\BookModel([
+			)
+			: Larsson\Library\Utilities\SQLHelper::prepareSearch(
+				Larsson\Library\Database\Databases::LarssonLibrary(),
+				new Larsson\Library\Models\BookModel([
 					"ISBN13" => $request["ISBN13"],
 				])
 			)
