@@ -32,10 +32,10 @@ function APIRead($request, $requestBody) {
 		? Larsson\Library\Utilities\SQLHelper::prepareSelect(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
 			((isset($request["BookID"]))
-				: new Larsson\Library\Models\BookModel([
+				? new Larsson\Library\Models\BookModel([
 					"BookID" => $request["BookID"],
 				])
-				? new Larsson\Library\Models\BookModel([
+				: new Larsson\Library\Models\BookModel([
 					"ISBN13" => $request["ISBN13"],
 				])
 			)
