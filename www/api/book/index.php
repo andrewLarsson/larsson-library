@@ -1,10 +1,9 @@
 <?php
-require_once("/opt/larsson/library/core.php");
+require_once("/opt/larsson/library/library/core.php");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 1000");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Content-Type: application/json");
 
 function APICreate($request, $requestBody) {
 	Larsson\Library\Utilities\SQLHelper::prepareInsert(
@@ -12,7 +11,7 @@ function APICreate($request, $requestBody) {
 		new Larsson\Library\Models\BookModel([
 			"ISBN13" => $requestBody->ISBN13,
 			"AuthorID" => $requestBody->AuthorID,
-			"BookSeriesID" => ((!empty($requestBody->BookSeriesID))
+			"BookSeriesID" => ((empty($requestBody->BookSeriesID))
 				? $requestBody->BookSeriesID
 				: null
 			),
@@ -29,12 +28,17 @@ function APICreate($request, $requestBody) {
 }
 
 function APIRead($request, $requestBody) {
-	return ((isset($request["BookID"]))
+	return ((isset($request["BookID"]) || isset($request["ISBN13"]))
 		? Larsson\Library\Utilities\SQLHelper::prepareSelect(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
-			new Larsson\Library\Models\BookModel([
-				"BookID" => $request["BookID"],
-			])
+			((isset($request["BookID"]))
+				: new Larsson\Library\Models\BookModel([
+					"BookID" => $request["BookID"],
+				])
+				? new Larsson\Library\Models\BookModel([
+					"ISBN13" => $request["ISBN13"],
+				])
+			)
 		)->execute()->fetchObject("Larsson\\Library\\Models\\BookModel")
 		: Larsson\Library\Utilities\SQLHelper::prepareSearch(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
