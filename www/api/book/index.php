@@ -34,15 +34,16 @@ function APIRead($request, $requestBody) {
 			? Larsson\Library\Utilities\SQLHelper::prepareSelect(
 				Larsson\Library\Database\Databases::LarssonLibrary(),
 				new Larsson\Library\Models\BookModel([
-					"BookID" => $request["BookID"],
+					"BookID" => $request["BookID"]
 				])
 			)->execute()->fetchObject("Larsson\\Library\\Models\\BookModel")
 			: Larsson\Library\Utilities\SQLHelper::prepareSearch(
 				Larsson\Library\Database\Databases::LarssonLibrary(),
 				new Larsson\Library\Models\BookModel([
-					"ISBN13" => $request["ISBN13"],
+					"ISBN13" => $request["ISBN13"]
 				])
 			)->execute()->fetchObject("Larsson\\Library\\Models\\BookModel")
+		)
 		: Larsson\Library\Utilities\SQLHelper::prepareSearch(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
 			new Larsson\Library\Models\BookModel([
