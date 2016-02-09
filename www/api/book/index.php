@@ -47,8 +47,8 @@ function APIRead($request, $requestBody) {
 		: Larsson\Library\Utilities\SQLHelper::prepareSearch(
 			Larsson\Library\Database\Databases::LarssonLibrary(),
 			new Larsson\Library\Models\BookModel([
-				"AuthorID" => ((isset($request["AuthorID"])) ? : null),
-				"BookSeriesID" => ((isset($request["BookSeriesID"])) ? : null)
+				"AuthorID" => ((isset($request["AuthorID"])) ? $request["AuthorID"] : null),
+				"BookSeriesID" => ((isset($request["BookSeriesID"])) ? $request["BookSeriesID"] : null)
 			])
 		)->execute()->fetchAll(PDO::FETCH_CLASS, "Larsson\\Library\\Models\\BookModel")
 	);
