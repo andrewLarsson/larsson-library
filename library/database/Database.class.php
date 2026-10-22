@@ -7,15 +7,11 @@ class Database implements DatabaseInterface {
 
 	function __construct(DatabaseConfig $config) {
 		$this->connection = new PDO(
-			$config->driver . ":" . "dbname=" . $config->schema . ";" . "host=" . $config->host,
+			$config->driver . ":" . "dbname=" . $config->schema . ";" . "host=" . $config->host . ";charset=" . ($config->charset ?? "utf8mb4"),
 			$config->user,
 			$config->password,
 			[
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-				PDO::ATTR_STATEMENT_CLASS => [
-					"\\Larsson\\Library\\Database\\PDOStatement",
-					[]
-				]
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 			]
 		);
 	}
@@ -25,11 +21,11 @@ class Database implements DatabaseInterface {
 	}
 
 	public function prepare($statement) {
-		return $this->connection->prepare($statement);
+		return new PDOStatement($this->connection->prepare($statement));
 	}
 
 	public function query($statement) {
-		return $this->connection->query($statement);
+		return new PDOStatement($this->connection->query($statement));
 	}
 
 	public function beginTransaction() {

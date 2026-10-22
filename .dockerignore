@@ -1,0 +1,7 @@
+.git
+conf/database/conf.d
+conf/database/database.sql
+tests
+.env*
+*.pem
+*.key
