@@ -1,0 +1,4 @@
+.env
+secrets/
+data/
+conf/database/conf.d/*.local.ini

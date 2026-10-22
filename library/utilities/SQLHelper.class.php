@@ -1,7 +1,7 @@
 <?php namespace Larsson\Library\Utilities;
 
 use \Exception;
-use \PDOStatement;
+use \Larsson\Library\Database\PDOStatement;
 
 class SQLHelper {
 	public static function prepareInsert(\Larsson\Library\Database\DatabaseInterface $database, \Larsson\Library\Core\ModelAbstract $model) {
@@ -151,8 +151,8 @@ class SQLHelper {
 	}
 
 	public static function mapResults(PDOStatement $statement, $classType, callable $function) {
-		if (!class_exists($objectType)) {
-			throw new Exception("Class \"" . $objectType . "\" does not exist.");
+		if (!class_exists($classType)) {
+			throw new Exception("Class \"" . $classType . "\" does not exist.");
 		}
 		$object = null;
 		while ($object = $statement->fetchObject($classType)) {

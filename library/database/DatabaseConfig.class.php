@@ -6,5 +6,6 @@ class DatabaseConfig {
 	public $user;
 	public $password;
 	public $schema;
+	public $charset = "utf8mb4";
 }
 ?>

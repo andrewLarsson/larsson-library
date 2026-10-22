@@ -1,0 +1,94 @@
+name: library
+services:
+  web:
+    build:
+      context: ${LIBRARY_BUILD_CONTEXT:-.}
+      additional_contexts:
+        ui: ${LIBRARY_UI_CONTEXT:?Set the pinned library UI Git URL or checkout path}
+      args:
+        PHP_IMAGE: ${PHP_IMAGE:?Set the approved PHP image digest}
+    restart: unless-stopped
+    mem_limit: 192m
+    pids_limit: 80
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    environment:
+      DB_HOST: db
+      DB_NAME: LarssonLibrary
+      DB_USER: library
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+      - /run/apache2:size=1m
+      - /var/lock/apache2:size=1m
+      - /opt/larsson/conf/database/conf.d:size=64k
+    volumes:
+      - type: bind
+        source: ${APP_VOLUME:?}/secrets/library.htpasswd
+        target: /run/secrets/library.htpasswd
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${APP_VOLUME:?}/secrets/library-db-password
+        target: /run/secrets/library-db-password
+        read_only: true
+        bind: {create_host_path: false}
+    depends_on:
+      db: {condition: service_healthy}
+    networks:
+      frontend: {aliases: [library-web]}
+      backend: {}
+    healthcheck:
+      test: [CMD, php, -r, "require '/opt/larsson/library/core.php'; Larsson\\Library\\Database\\Databases::LarssonLibrary()->query('SELECT 1')->fetchColumn();"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+  db:
+    image: ${MARIADB_IMAGE:?Set the approved MariaDB image digest}
+    restart: unless-stopped
+    mem_limit: 256m
+    pids_limit: 100
+    security_opt: [no-new-privileges:true]
+    environment:
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/library-db-root-password
+      MARIADB_DATABASE: LarssonLibrary
+      MARIADB_USER: library
+      MARIADB_PASSWORD_FILE: /run/secrets/library-db-password
+    command:
+      - --character-set-server=latin1
+      - --collation-server=latin1_swedish_ci
+      - --innodb-buffer-pool-size=32M
+      - --innodb-log-file-size=32M
+      - --key-buffer-size=8M
+      - --max-connections=10
+      - --performance-schema=OFF
+      - --tmp-table-size=8M
+      - --max-heap-table-size=8M
+    volumes:
+      - type: bind
+        source: ${APP_VOLUME:?}/data/library/mysql
+        target: /var/lib/mysql
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${APP_VOLUME:?}/secrets/library-db-root-password
+        target: /run/secrets/library-db-root-password
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${APP_VOLUME:?}/secrets/library-db-password
+        target: /run/secrets/library-db-password
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [backend]
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 45s
+networks:
+  frontend:
+    external: true
+    name: apps-library-frontend
+  backend:
+    internal: true

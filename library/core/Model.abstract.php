@@ -10,7 +10,7 @@ abstract class ModelAbstract {
 		$this->__init($properties);
 	}
 
-	final private function __init(Array $properties) {
+	private function __init(Array $properties) {
 		foreach ($properties as $property => $value) {
 			if (property_exists($this, $property)) {
 				$this->$property = $value;
